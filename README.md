@@ -1,4 +1,4 @@
-[TOC]
+בס"ד
 # Arithmetic series
 ## Assembly project
 1. Introduction
@@ -11,7 +11,7 @@
 
 ## Introduction:
 - Name of the programmer: Yoav Sagiv
-- Teacher: Barak Zubri
+- Teacher: Barak Zberi
 - Grade: 10th
 - School: Yeshiva Bnei Akiva Givat Shmuel
 - Year of submission: 2023
@@ -27,12 +27,15 @@
 - And finally, the user can guess/check if a number entered can be in the arithmetic series
 
 ## Examples
+![Example 1](https://github.com/YoavSagiv/YoavSagiv/assets/132649673/229fee3d-a90c-47b3-b156-9a6d1e3669f0)
 - Here we have an image that prints the series properly 
 and sends a positive answer to the question of the number in the series
 
+![Example 2](https://github.com/YoavSagiv/YoavSagiv/assets/132649673/33ad6440-add9-49d5-b0db-4eba29f0451e)
 - Here we have an image that prints the series properly 
 and sends a negative answer to the question of the number in the series
 
+![Example 3](https://github.com/YoavSagiv/YoavSagiv/assets/132649673/1f5f2474-9f60-4a65-990a-277719aa8a90)
 - Here we have a picture that shows that if the current number in the series is
 bigger than 4 digits ,the program does not do the second step.
 

@@ -47,7 +47,7 @@ pop dx
 pop ax
 pop bp
 ret 6
-menu endp
+menu endp ;; insert a num into the address
 
 ;;Gets a number address
 ;;Checks if it is above 30H and below 39H
@@ -95,10 +95,11 @@ pop ax
 pop bp
 ret 
 CheckIfThisIsANumberAndMakeItDecNum endp 
+;;1. live it as it was 2.change to a real num
 
 ;;Receives an address of a number
 ;;Checking how many numbers he has
-;;Put a few places in the BX
+;;Put how much places in the BX
 ;;Moves the numbers to the right by BX
 FillNum proc
 push bp
@@ -111,15 +112,27 @@ push cx
 xor ax,ax
 xor cx,cx
 mov bx,[bp+4];;num(offset)
-mov ax,[bp+6];;digits num
+mov cx,4 
+
+CheckHowMuchdigitsThereIs: 
+cmp ds:bx,0dh
+je Add1
+cmp ds:bx,0h
+je Add1 
+jmp looping
+Add1: 
+mov ds:bx,0h 
+inc ax
+looping:
+inc bx
+loop CheckHowMuchdigitsThereIs
 cmp ax,0h
 je ending4
-
 mov cx,4
 mov bx,[bp+4]
 sub cx,ax;;in cx there is the nums of the digits in the number 
 add bx,cx
-dec bx;;in bx there is the offset of the lost digit of the number
+dec bx;;in bx there is the offset of the lost digit of the number 
 
 MoveTheDigitsASide:
 mov si, bx
@@ -139,6 +152,85 @@ pop si
 pop bp
 ret 6
 FillNum endp
+;;move the digit of the num a side(1100 -> 0011)
+
+;;Gets the address of the first and current number
+;;Makes a loop that puts every digit 
+;;from the first number in the cell of the current number 
+PutfirstNumInCurrent proc
+push bp
+mov bp,sp
+push si
+push ax
+push bx
+push cx
+
+mov si,[bp+4];;the offset of current number
+mov bx,[bp+6];;the offset of first number
+add si,9
+add bx,3;; i want to go to the lest index 
+mov cx,4
+mooving:
+mov al,[byte ptr ds:bx]
+mov [byte ptr ds:si],al
+dec si
+dec bx
+loop mooving
+
+pop cx
+pop bx
+pop ax
+pop si
+pop bp
+ret 6
+PutfirstNumInCurrent endp
+;;put in current num what there is in the frist num
+
+;get the offset of the size and ans
+;;Go through each digit in the number of the size
+;;If all the digits are 0, you will end the procedure
+;;If we reached a number other than 0, put 1 in ANS
+;;Then check if the number is equal to 0
+;;If not, simply lower the number by 1 and finish the procedure
+;;If so, put a 9 in that digit and do the test for the next digit
+dec_num proc
+push bp
+mov bp,sp
+push si
+push bx
+push cx
+mov bx,[bp+4];;the offset of the lest digit of size num 
+mov si,[bp+6];;the offset of ans 
+
+mov cx,4
+cheakIftheAllNumIs0:
+cmp ds:bx,0
+jne ans1
+dec bx
+loop cheakIftheAllNumIs0 
+mov ds:si,0
+jmp ending5
+ans1:
+mov ds:si,1
+mov bx,[bp+4]
+
+minus:
+cmp ds:bx,0h
+je its0
+dec ds:bx
+jmp ending5
+its0:
+mov ds:bx,9h
+dec bx
+jmp minus
+
+ending5:
+pop cx
+pop bx
+pop si
+pop bp
+ret 6
+dec_num endp;; dec a num(0011->0010) 
 
 ;;Gets the current number and the change of the series
 ;;Adds the numbers by digits
@@ -147,7 +239,6 @@ FillNum endp
 ;;2. If so, Sub from the digit 10D 
 ;;increase the next digit by 1 
 ;;and check if the second digit is bigger than 10D
-
 add_num proc
 push bp
 mov bp,sp
@@ -214,84 +305,7 @@ pop ax
 pop si
 pop bp
 ret  ;; keeps current_number and change_number offset
-add_num endp
-
-;;Gets the address of the first and current number
-;;Makes a loop that puts every digit 
-;;from the first number in the cell of the current number 
-PutfirstNumInCurrnt proc
-push bp
-mov bp,sp
-push si
-push ax
-push bx
-push cx
-
-mov si,[bp+4];;the offset of current number
-mov bx,[bp+6];;the offset of first number
-add si,9
-add bx,3;; i want to go to the lest index 
-mov cx,4
-mooving:
-mov al,[byte ptr ds:bx]
-mov [byte ptr ds:si],al
-dec si
-dec bx
-loop mooving
-
-pop cx
-pop bx
-pop ax
-pop si
-pop bp
-ret 6
-PutfirstNumInCurrnt endp
-
-;get the offset of the size and ans
-;;Go through each digit in the number of the size
-;;If all the digits are 0, you will end the procedure
-;;If we reached a number other than 0, put 1 in ANS
-;;Then check if the number is equal to 0
-;;If not, simply lower the number by 1 and finish the procedure
-;;If so, put a 9 in that digit and do the test for the next digit
-dec_num proc
-push bp
-mov bp,sp
-push si
-push bx
-push cx
-mov bx,[bp+4];;the offset of the lest digit of size num 
-mov si,[bp+6];;the offset of ans 
-
-mov cx,4
-cheakIftheAllNumIs0:
-cmp ds:bx,0
-jne ans1
-dec bx
-loop cheakIftheAllNumIs0 
-mov ds:si,0
-jmp ending5
-ans1:
-mov ds:si,1
-mov bx,[bp+4]
-
-minus:
-cmp ds:bx,0h
-je its0
-dec ds:bx
-jmp ending5
-its0:
-mov ds:bx,9h
-dec bx
-jmp minus
-
-ending5:
-pop cx
-pop bx
-pop si
-pop bp
-ret 6
-dec_num endp
+add_num endp ;;add 2 numbers and put the result in current num
     
 ;;gets the addresses of the current number
 ;;the number we want to check and our answer
@@ -357,13 +371,8 @@ push bx
 lea bx,msg4     ;;get frist num
 push bx
 call CheckIfThisIsANumberAndMakeItDecNum
-
 lea bx,first_number
-inc bx
-xor ax,ax 
-mov al,[bx]
-push ax
-inc bx
+add bx,2
 push bx 
 call FillNum
 
@@ -377,12 +386,8 @@ lea bx,msg4
 push bx
 call CheckIfThisIsANumberAndMakeItDecNum
 lea bx,change_number
-inc bx
-xor ax,ax 
-mov al,[bx]
-push ax
-inc bx
-push bx  
+add bx,2
+push bx 
 call FillNum
 
 push offset msg3
@@ -395,11 +400,7 @@ lea bx,msg4
 push bx
 call CheckIfThisIsANumberAndMakeItDecNum 
 lea bx,size_number 
-inc bx
-xor ax,ax 
-mov al,[bx]
-push ax
-inc bx
+add bx,2
 push bx 
 call FillNum
 
@@ -412,7 +413,7 @@ add bx,2
 push bx
 lea bx,current_number
 push bx
-call PutfirstNumInCurrnt
+call PutfirstNumInCurrent
 
 lea bx,size_number
 add bx,2 
@@ -472,11 +473,7 @@ lea bx,msg4
 push bx
 call CheckIfThisIsANumberAndMakeItDecNum 
 lea bx,test_number 
-inc bx
-xor ax,ax 
-mov al,[bx]
-push ax
-inc bx
+add bx,2
 push bx 
 call FillNum
 
