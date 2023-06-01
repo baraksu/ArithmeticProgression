@@ -1,3 +1,4 @@
+[TOC]
 # Arithmetic series
 ## Assembly project
 1. Introduction
