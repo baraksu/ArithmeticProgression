@@ -10,11 +10,11 @@
 7. Experience
 
 ## Introduction:
-- Name of the programmer: Yoav Sagiv
-- Teacher: Barak suberi
-- Grade: 10th
-- School: Yeshiva Bnei Akiva Givat Shmuel
-- Year of submission: 2023
+- Name of the programmer: **Yoav Sagiv**
+- Teacher: **Barak suberi**
+- Grade: **10th**
+- School:**Yeshiva Bnei Akiva Givat Shmuel**
+- Year of submission: **2023**
 
 ## program actions
 - Receives the initial number, the change and the size of the arithmetic series
