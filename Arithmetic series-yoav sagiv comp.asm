@@ -1,6 +1,14 @@
 .Model small
 .stack 100h
-.data
+.data                                                                                         
+m0 db 13,10,"                _ _   _                    _   _                      _     "      
+m2 db 13,10,"     /\        (_) | | |                  | | (_)                    (_)     "     
+m3 db 13,10,"    /  \   _ __ _| |_| |__  _ __ ___   ___| |_ _  ___   ___  ___ _ __ _  ___  ___  "
+m4 db 13,10,"   / /\ \ | '__| | __| '_ \| '_ ` _ \ / _ \ __| |/ __| / __|/ _ \ '__| |/ _ \/ __|  "
+m5 db 13,10,"  / ____ \| |  | | |_| | | | | | | | |  __/ |_| | (__  \__ \  __/ |  | |  __/\__ \  "
+m6 db 13,10," /_/    \_\_|  |_|\__|_| |_|_| |_| |_|\___|\__|_|\___| |___/\___|_|  |_|\___||___/ $"
+                                                                                  
+
 msg1 db 13,10,"enter the first num of the arithmetic series $";;Notice of the first number request
 msg2 db 13,10,"enter the change in the arithmetic series $" ;;Notice of delta request
 msg3 db 13,10,"enter the size of the arithmetic series $" ;;Notice of size request 
@@ -9,6 +17,7 @@ crlf db 13,10,"$" ;dropped a line
 msg5 db 13,10,"enter a num that you think that its in the arithmetic series $" ;request for a number that may be in the series
 msg6 db 13,10,"yes! the num is in the arithmetic series $" ;A positive message
 msg7 db 13,10,"no, the num is not in the arithmetic series $";negative message
+msg8 db 13,10,"you want to start again? a - again $";start message
 
 first_number db 5,?,5 dup(0h);;the initial number of the series 
 current_number db 10 dup(0h);;The current number of the series (see below)
@@ -16,7 +25,8 @@ endThePrinting db ' $';; for print the current number with a space
 change_number db  5,?,5 dup(0h);;The delta of the series 
 size_number db  5,?,5 dup(0h);;The size of the series 
 test_number db 11,?,11 dup(0h);;The number that may be in the series
-ans db 0;;
+ans db 0;; anser for later
+
 
 .code
 mov ax,@data
@@ -34,7 +44,7 @@ push ax
 push dx
 push bx
     
-mov dx,[bp+6] ;;in dx there is the offset of msg3
+mov dx,[bp+6] ;;in dx there is the offset of msg
 mov ah,09h
 int 21h
 
@@ -83,9 +93,12 @@ mov dx,bp+4;; in dx there is the offset of msg4
 mov ah,09h
 int 21h
 
+mov dx,bp+6
+sub dx,2
 mov ah,0ah
 int 21h
-mov si,bp+4
+mov si,bp+6
+mov cx,4
 jmp Checking
 
 ending1:
@@ -362,7 +375,12 @@ CmpNumbers endp
  
 
 start:
-push offset msg1
+lea dx,m0
+mov ah,09h
+int 21h 
+startO:
+lea bx,msg1
+push bx
 lea bx,first_number
 push bx 
 call menu
@@ -510,5 +528,18 @@ push bx
 call add_num
 jmp CheckIfTheNumIsIN
 
-EndOf: 
+EndOf:
+lea dx,msg8
+mov ah,09h
+int 21h
+
+mov ah,01h
+int 21h
+cmp al,61h 
+
+lea dx,crlf
+mov ah,09h
+int 21h
+je startO
+ 
 end
