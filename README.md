@@ -11,7 +11,7 @@
 
 ## Introduction:
 - Name of the programmer: Yoav Sagiv
-- Teacher: Barak Zberi
+- Teacher: Barak suberi
 - Grade: 10th
 - School: Yeshiva Bnei Akiva Givat Shmuel
 - Year of submission: 2023
